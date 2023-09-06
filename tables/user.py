@@ -3,10 +3,15 @@ from database.connection import Connection
 class User:
     def __init__(self):
         self.id = int(input('ID do usuário na origem:'))
+        self.exclude_metadata = str(input('Excluir metadados (separado por vírgula ",". Deixe vazio para importar todos os metadados): '))
         self.metadata = []
     
     def run(self):
         print('\n\nIniciando migração do usuário...\n\n')
+        if self.exclude_metadata:
+            self.exclude_metadata = self.exclude_metadata.replace(" ", "")
+            self.exclude_metadata = self.exclude_metadata.split(',')
+
         user = Connection().queryBy({'id': self.id}, 'users', 1)
         if not user:
             raise Exception('Usuário não existe na base de dados de origem.')
@@ -34,10 +39,11 @@ class User:
         usermetas = Connection().queryBy({'user_id': self.id}, 'usermeta')
 
         for (umeta_id, user_id, meta_key, meta_value) in usermetas:
-            self.metadata.append({
-                'meta_key': meta_key,
-                'meta_value': meta_value
-            })
+            if meta_key not in self.exclude_metadata:
+                self.metadata.append({
+                    'meta_key': meta_key,
+                    'meta_value': meta_value
+                })
         
         destiny_user_id = Connection('destiny').insert('users', {
             'user_login': self.user_login,
