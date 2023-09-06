@@ -1,6 +1,7 @@
 from database.environment import ORIGIN_DB, DESTINY_DB, PREFIXES
 import mysql.connector
 from mysql.connector import errorcode
+from utils.bcolors import bcolors
 
 class Connection:
     def __init__(self, environment='origin'):
@@ -62,16 +63,16 @@ class Connection:
 
     def handleException(err):
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            print('Usuário ou senha de acesso ao banco de dados está incorreto.')
+            print(bcolors.FAIL + 'Usuário ou senha de acesso ao banco de dados está incorreto.\n\n' + bcolors.ENDC)
         elif err.errno == errorcode.ER_BAD_DB_ERROR:
-            print("O banco de dados fornecido não existe.")
+            print(bcolors.FAIL + "O banco de dados fornecido não existe.\n\n" + bcolors.ENDC)
         else:
-            print("Ocorreu um erro de banco de dados. (Detalhe: {})".format(err))
+            print(bcolors.FAIL + "Ocorreu um erro de banco de dados. (Detalhe: {})\n\n".format(err) + bcolors.ENDC)
 
     def _setTableName(self, table):
         return "{}{}".format(self._env_prefix, table)
     
     def _close (self):
-        print("  {}".format(self._cursor.statement))
+        print(bcolors.OKBLUE + "  {}".format(self._cursor.statement) + bcolors.ENDC)
         self._cursor.close()
         self._cnx.close()

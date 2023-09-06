@@ -2,6 +2,8 @@ from tables.user import User
 from database.connection import Connection
 import mysql.connector
 
+from utils.bcolors import bcolors
+
 class App:
     def __init__(self):
         self.tables = {
@@ -20,10 +22,10 @@ class App:
                 Connection.handleException(err)
             
             except Exception as err:
-                print('\n\n{}\n\n'.format(err))
+                print(bcolors.FAIL + '\n\n{}\n\n'.format(err) + bcolors.ENDC)
 
             else:
-                print('\n\nMigração concluída com sucesso. :)\n\n')
+                print(bcolors.OKGREEN + '\n\nMigração concluída com sucesso. :)\n\n' + bcolors.ENDC)
                 exit_signal = True
 
 

@@ -13,8 +13,8 @@ class User:
         
         (
             self.id,
-            self.user_login, 
-            self.user_pass, 
+            self.user_login,
+            self.user_pass,
             self.user_nicename,
             self.user_email,
             self.user_url,
